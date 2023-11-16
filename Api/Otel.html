@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Data Display</title>
+    <style>
+      #dataContainer {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dataContainer">
+      <h1>API Data Display</h1>
+      <div id="responseData"></div>
+    </div>
+
+    <script>
+      var xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
+
+      xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+            var jsonData = JSON.parse(this.responseText);
+            displayData(jsonData);
+          } else {
+            document.getElementById("responseData").innerHTML =
+              "Error: " + this.status;
+          }
+        }
+      });
+
+      xhr.open(
+        "GET",
+        "https://www.nosyapi.com/apiv2/getTurkey?id=9040&city=izmir"
+      );
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.setRequestHeader(
+        "Authorization",
+        "Bearer 6nZX290Sh3uTY36j1FypSiIQAjm3I496Vcj3hziH7GfggwOhiDYBiNPGe86u"
+      );
+
+      xhr.send();
+
+      function displayData(data) {
+        var responseContainer = document.getElementById("responseData");
+        var html = "<ul>";
+
+        for (var i = 0; i < data.data.length; i++) {
+          var item = data.data[i];
+          html += "<li>";
+          html += "<strong>Name:</strong> " + item.name + "<br>";
+          html += "<strong>City:</strong> " + item.city + "<br>";
+          html += "<strong>Country:</strong> " + item.country + "<br>";
+          html += "<strong>Street:</strong> " + item.street + "<br>";
+          html += "<strong>Streetv2:</strong> " + item.streetv2 + "<br>";
+          html += "<strong>Phone:</strong> " + item.phone + "<br>";
+          html += "</li>";
+        }
+
+        html += "</ul>";
+        responseContainer.innerHTML = html;
+      }
+    </script>
+  </body>
+</html>

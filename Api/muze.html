@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="responseContainerMuseum"></div>
+    <div id="responseContainerCity"></div>
+    <div id="responseContainerDistricts"></div>
+
+    <script>
+      function makeRequest(url, containerId) {
+        var data = new FormData();
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            if (this.status === 200) {
+              var jsonResponse = JSON.parse(this.responseText);
+
+              var responseContainer = document.getElementById(containerId);
+              responseContainer.innerHTML =
+                "<pre>" + JSON.stringify(jsonResponse, null, 2) + "</pre>";
+            } else {
+              console.error("API isteği başarısız! Hata kodu: " + this.status);
+            }
+          }
+        });
+
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader(
+          "Authorization",
+          "Bearer 6nZX290Sh3uTY36j1FypSiIQAjm3I496Vcj3hziH7GfggwOhiDYBiNPGe86u"
+        );
+
+        xhr.send(data);
+      }
+      makeRequest(
+        "https://www.nosyapi.com/apiv2/museum/getMuseum?city=adana&county=",
+        "responseContainerMuseum"
+      );
+    </script>
+  </body>
+</html>
